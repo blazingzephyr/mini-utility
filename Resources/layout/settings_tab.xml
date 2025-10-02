@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+	<EditText
+		android:id="@+id/account_settings"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/account_settings"
+		android:inputType="text"
+		android:focusable="true"
+		android:focusableInTouchMode="true"/>
+
+	<EditText
+		android:id="@+id/google_app_name"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/google_app_name"
+		android:inputType="text"
+		android:focusable="true"
+		android:focusableInTouchMode="true"/>
+	 
+	<EditText
+		android:id="@+id/sheets_id"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/sheets_id"
+		android:inputType="text"
+		android:focusable="true"
+		android:focusableInTouchMode="true"/>
+
+	<EditText
+		android:id="@+id/range"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/range"
+		android:inputType="text"
+		android:focusable="true"
+		android:focusableInTouchMode="true"/>
+
+	<CheckBox
+		android:id="@+id/auto_increment"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/auto_increment"/>
+	
+	<Button
+		android:id="@+id/update_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/update_settings"/>
+	
+</LinearLayout>

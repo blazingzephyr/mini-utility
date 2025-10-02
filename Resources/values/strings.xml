@@ -1,0 +1,84 @@
+<resources>
+    <string name="app_name">Mini-Utility</string>
+
+	<string name="finances">Finances</string>
+	<string name="tasks">Tasks</string>
+	<string name="settings">Settings</string>
+
+	<string name="store">Store</string>
+	<string name="product">Product</string>
+	<string name="category">Category</string>
+	<string name="price">Price</string>
+	<string name="days">Days</string>
+	<string name="add_entry">Add Entry</string>
+
+	<string name="not_connected">Not connected to the Google API.</string>
+	<string name="success">Successfully added the entry.</string>
+	<string name="fail">Nothing has been updated.</string>
+	
+	<string name="WIP">Not yet implemented. W.I.P.</string>
+	
+	<string name="account_settings">Google API account</string>
+	<string name="google_app_name">Google API application name</string>
+	<string name="sheets_id">Google Sheets ID</string>
+	<string name="range">Google Sheets Writing Range</string>
+	<string name="auto_increment">Auto-Increment</string>
+	<string name="update_settings">Update Settings and API</string>
+	
+	<string name="saved">Saved the settings.</string>
+	<string name="no_changes">No changes were made.</string>
+	<string name="launched_api">Launched the Google API service.</string>
+	
+	<string-array name="categories">
+		<item>Стипендия</item>
+		<item>Поступление</item>
+		<item>Зарплата</item>
+		<item>Мясо</item>
+		<item>Молоко</item>
+		<item>Хлеб</item>
+		<item>Овощи</item>
+		<item>Приправы</item>
+		<item>Крупы</item>
+		<item>Продукты</item>
+		<item>Готовая еда</item>
+		<item>Хозтовары</item>
+		<item>Канцелярия</item>
+		<item>Проживание</item>
+		<item>Связь</item>
+		<item>Транспорт</item>
+		<item>Сладости</item>
+		<item>Снеки</item>
+		<item>Лекарства</item>
+		<item>Прочее</item>
+	</string-array>
+
+	<string-array name="categories_alt">
+		<item>Стипендия</item>
+		<item>Поступление</item>
+		<item>Зарплата</item>
+		<item>Продукты</item>
+		<item>Продукты</item>
+		<item>Продукты</item>
+		<item>Продукты</item>
+		<item>Продукты</item>
+		<item>Продукты</item>
+		<item>Продукты</item>
+		<item>Готовая еда</item>
+		<item>Бытовые товары</item>
+		<item>Канцтовары</item>
+		<item>Проживание</item>
+		<item>Связь</item>
+		<item>Транспорт</item>
+		<item>Сладости</item>
+		<item>Напитки</item>
+		<item>Лекарства</item>
+		<item>Прочее</item>
+	</string-array>
+	
+	<string-array name="days">
+		<item>Одноразовое</item>
+		<item>Несколько дней</item>
+		<item>Многоразовое</item>
+		<item>Надолго</item>		
+	</string-array>
+</resources>
