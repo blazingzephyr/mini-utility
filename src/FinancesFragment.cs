@@ -73,6 +73,9 @@ public class FinancesFragment : AndroidX.Fragment.App.Fragment
 
                 if (updateResponse.UpdatedCells > 0 && prefs.AutoIncrement && prefs.Range is not null)
                 {
+                    product.Text = string.Empty;
+                    price.Text = string.Empty;
+
                     prefs.Range = Regex.Replace(prefs.Range, @"(?<=\D)(\d+)", m => (int.Parse(m.Value) + 1).ToString());
                     prefs.ApplyChanges();
                 }
