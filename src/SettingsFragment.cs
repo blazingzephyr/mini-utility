@@ -1,5 +1,6 @@
 ﻿
 using Android.Views;
+using AndroidX.RecyclerView.Widget;
 
 namespace MiniUtility;
 
@@ -13,13 +14,18 @@ internal class SettingsFragment : AndroidX.Fragment.App.Fragment
 
         var account = view.FindViewById<EditText>(Resource.Id.account_settings);
         var appName = view.FindViewById<EditText>(Resource.Id.google_app_name);
-        var sheet_id = view.FindViewById<EditText>(Resource.Id.sheets_id);
-        var range = view.FindViewById<EditText>(Resource.Id.range);
-        var update = view.FindViewById<Button>(Resource.Id.update_button);
+        var finances_sheet = view.FindViewById<LinearLayout>(Resource.Id.finances_sheet);
         var autoIncrement = view.FindViewById<CheckBox>(Resource.Id.auto_increment);
+        var acceptedSheets = view.FindViewById<RecyclerView>(Resource.Id.accepted_sheets)!;
+        var addSheet = view.FindViewById<Button>(Resource.Id.add_sheet);
+        var update = view.FindViewById<Button>(Resource.Id.update_button);
 
-        if (account is null || appName is null || sheet_id is null || range is null ||
-            update is null || autoIncrement is null || activity.Prefs is null) return view;
+        if (account is null || appName is null || finances_sheet is null || acceptedSheets is null ||
+            update is null || autoIncrement is null || addSheet is null || activity.Prefs is null) return view;
+
+        var sheet_id = finances_sheet.FindViewById<EditText>(Resource.Id.sheets_id);
+        var range = finances_sheet.FindViewById<EditText>(Resource.Id.range);
+        if (sheet_id is null || range is null) return view;
 
         account.Text = activity.Prefs.AccountSettings;
         account.TextChanged += (o, s) => activity.Prefs.AccountSettings = s.Text?.ToString();
@@ -36,9 +42,30 @@ internal class SettingsFragment : AndroidX.Fragment.App.Fragment
         autoIncrement.Checked = activity.Prefs.AutoIncrement;
         autoIncrement.CheckedChange += (o, s) => activity.Prefs.AutoIncrement = s.IsChecked;
 
+        NestedRecyclerAdapter RefreshAdapter()
+        {
+            var adapter = new NestedRecyclerAdapter(Resource.Layout.nested_item, activity.Prefs!.ScoreSheets);
+            adapter.TextChanged += (o, s) =>
+            {
+                activity.Prefs.ScoreSheets[s.Position1][s.Position2] = s.Text!.ToString()!;
+            };
+
+            return adapter;
+        }
+
+        acceptedSheets.SetLayoutManager(new LinearLayoutManager(Context));
+        acceptedSheets.SetAdapter(RefreshAdapter());
+
+        addSheet.Click += (sender, e) =>
+        {
+            activity.Prefs.ScoreSheets.Add([string.Empty, string.Empty]);
+            acceptedSheets.SetAdapter(RefreshAdapter());
+        };
+
         update.Click += (sender, e) =>
         {
             int result = activity.SetSheetsService();
+            int update_scores = activity.UpdateScores();
             int changesMade = activity.Prefs.ApplyChanges();
 
             if (result == 0)

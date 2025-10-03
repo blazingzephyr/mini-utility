@@ -11,6 +11,7 @@ namespace MiniUtility;
 [Activity(Label = "Mini-Utility", MainLauncher = true)]
 internal class MainActivity : FragmentActivity
 {
+    public event Action? ScoresUpdated;
     public PreferencesManager? Prefs { get; set; }
     public SheetsService? Service { get; set; }
 
@@ -63,5 +64,17 @@ internal class MainActivity : FragmentActivity
             this.CreateToast(ex.Message);
             return -1;
         }
+    }
+
+    public int UpdateScores(bool force = false)
+    {
+        if (Prefs is null) return 0;
+        if (Prefs.ScoreSheets.Count == 0) return 0;
+        
+        bool equals = ListUtility.Compare(Prefs.CurrentScoreSheets, Prefs.ScoreSheets);
+        if (equals && !force) return 0;
+        if (ScoresUpdated is null) return -1;
+        ScoresUpdated();
+        return 1;
     }
 }

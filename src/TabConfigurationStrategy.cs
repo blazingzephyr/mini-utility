@@ -14,7 +14,8 @@ internal class TabConfigurationStrategy(Context context) : Object, TabLayoutMedi
         int id = position switch
         {
             0 => Resource.String.finances,
-            1 => Resource.String.tasks,
+            // 1 => Resource.String.tasks,
+            1 => Resource.String.scores,
             _ => Resource.String.settings
         };
 

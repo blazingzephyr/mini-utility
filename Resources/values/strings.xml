@@ -18,11 +18,15 @@
 	
 	<string name="WIP">Not yet implemented. W.I.P.</string>
 	
+	<string name="scores">Scores</string>
+	
 	<string name="account_settings">Google API account</string>
 	<string name="google_app_name">Google API application name</string>
 	<string name="sheets_id">Google Sheets ID</string>
 	<string name="range">Google Sheets Writing Range</string>
 	<string name="auto_increment">Auto-Increment</string>
+	<string name="add_sheet">Add New Score Sheet</string>
+	<string name="sheet_info">Google Sheets ID and Range</string>
 	<string name="update_settings">Update Settings and API</string>
 	
 	<string name="saved">Saved the settings.</string>

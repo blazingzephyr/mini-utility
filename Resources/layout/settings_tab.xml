@@ -21,30 +21,28 @@
 		android:inputType="text"
 		android:focusable="true"
 		android:focusableInTouchMode="true"/>
-	 
-	<EditText
-		android:id="@+id/sheets_id"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:hint="@string/sheets_id"
-		android:inputType="text"
-		android:focusable="true"
-		android:focusableInTouchMode="true"/>
 
-	<EditText
-		android:id="@+id/range"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:hint="@string/range"
-		android:inputType="text"
-		android:focusable="true"
-		android:focusableInTouchMode="true"/>
-
+	<include layout="@layout/sheet_settings" android:id="@+id/finances_sheet" />
+	
 	<CheckBox
 		android:id="@+id/auto_increment"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/auto_increment"/>
+
+	<androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/accepted_sheets"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:overScrollMode="never"
+        android:nestedScrollingEnabled="false"/>
+
+	<Button
+		android:id="@+id/add_sheet"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/add_sheet"/>
 	
 	<Button
 		android:id="@+id/update_button"
