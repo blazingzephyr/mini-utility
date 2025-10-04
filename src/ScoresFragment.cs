@@ -60,40 +60,39 @@ internal class ScoresFragment : AndroidX.Fragment.App.Fragment
                     values[j] = valuesRow[j].ToString()!;
                 }
             }
-            catch (GoogleApiException ex)
+            catch (GoogleApiException ex) when (ex.HttpStatusCode == HttpStatusCode.BadRequest)
             {
-                if (ex.HttpStatusCode == HttpStatusCode.BadRequest && activity.DriveService is not null)
+                if (activity.DriveService is null) return;
+
+                using MemoryStream memoryStream = new MemoryStream();
+                var fileRequest = activity.DriveService.Files.Get(sheetId);
+
+                var file = await fileRequest.ExecuteAsync();
+                title = file.Name.Split(".xls")[0];
+
+                var downloadResponse = await fileRequest.DownloadAsync(memoryStream);
+                if (downloadResponse.Status == Google.Apis.Download.DownloadStatus.Failed)
                 {
-                    using MemoryStream memoryStream = new MemoryStream();
-                    var fileRequest = activity.DriveService.Files.Get(sheetId);
-                    
-                    var file = await fileRequest.ExecuteAsync();
-                    title = file.Name.Split(".xls")[0];
-
-                    var downloadResponse = await fileRequest.DownloadAsync(memoryStream);
-                    if (downloadResponse.Status == Google.Apis.Download.DownloadStatus.Failed)
-                    {
-                        activity.CreateToast($"{sheetId}: {downloadResponse.Exception.Message}");
-                        return;
-                    }
-
-                    XLWorkbook workbook = new (memoryStream);
-                    IXLCells cells = workbook.Cells(sheetRange);
-
-                    values = [];
-                    foreach (var cell in cells)
-                    {
-                        if (!cell.IsEmpty())
-                        {
-                            values.Add(cell.GetString());
-                        }
-                    }
-                }
-                else
-                {
-                    activity.CreateToast($"{sheetId}: {ex.Message}");
+                    activity.CreateToast($"{sheetId}: {downloadResponse.Exception.Message}");
                     return;
                 }
+
+                XLWorkbook workbook = new(memoryStream);
+                IXLCells cells = workbook.Cells(sheetRange);
+
+                values = [];
+                foreach (var cell in cells)
+                {
+                    if (!cell.IsEmpty())
+                    {
+                        values.Add(cell.GetString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                activity.CreateToast($"{sheetId}: {ex.Message}");
+                return;
             }
 
             dataset.Add(new string[values.Count + 1]);
