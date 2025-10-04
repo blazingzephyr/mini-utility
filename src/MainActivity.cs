@@ -3,6 +3,7 @@ using AndroidX.Fragment.App;
 using AndroidX.ViewPager2.Widget;
 using Google.Android.Material.Tabs;
 using Google.Apis.Auth.OAuth2;
+using Google.Apis.Drive.v3;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 
@@ -14,6 +15,7 @@ internal class MainActivity : FragmentActivity
     public event Action? ScoresUpdated;
     public PreferencesManager? Prefs { get; set; }
     public SheetsService? Service { get; set; }
+    public DriveService? DriveService { get; set; }
 
     protected override void OnCreate(Bundle? savedInstanceState)
     {
@@ -47,13 +49,17 @@ internal class MainActivity : FragmentActivity
         {
             var credential = GoogleCredential
                     .FromJson(Prefs.AccountSettings)
-                    .CreateScoped(SheetsService.Scope.Spreadsheets);
+                    .CreateScoped(SheetsService.Scope.Spreadsheets,
+                                  DriveService.Scope.DriveReadonly);
 
-            Service = new SheetsService(new BaseClientService.Initializer()
+            var initializer = new BaseClientService.Initializer()
             {
                 HttpClientInitializer = credential,
                 ApplicationName = Prefs.AppName
-            });
+            };
+
+            Service = new SheetsService(initializer);
+            DriveService = new DriveService(initializer);
 
             this.CreateToast(Resource.String.launched_api);
             return 1;

@@ -1,6 +1,9 @@
 ﻿
+using System.Net;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
+using ClosedXML.Excel;
+using Google;
 
 namespace MiniUtility;
 
@@ -34,33 +37,75 @@ internal class ScoresFragment : AndroidX.Fragment.App.Fragment
         for (int i = 0; i < scoreSheets.Count; i++)
         {
             var sheetId = scoreSheets[i][0];
-            var valuesRequest = activity.Service.Spreadsheets.Values.Get(sheetId, scoreSheets[i][1]);
-            var nameRequest = activity.Service.Spreadsheets.Get(sheetId);
-            nameRequest.Fields = "properties.title";
+            var sheetRange = scoreSheets[i][1];
+
+            string title = string.Empty;
+            IList<string> values = [];
 
             try
             {
+                var valuesRequest = activity.Service.Spreadsheets.Values.Get(sheetId, sheetRange);
+                var nameRequest = activity.Service.Spreadsheets.Get(sheetId);
+                nameRequest.Fields = "properties.title";
+
                 var titleResponse = await nameRequest.ExecuteAsync();
-                var title = titleResponse.Properties.Title;
+                title = titleResponse.Properties.Title;
 
                 var valuesResponse = await valuesRequest.ExecuteAsync();
-                var values = valuesResponse.Values[0];
+                var valuesRow = valuesResponse.Values[0];
+                values = new string[valuesRow.Count];
 
-                dataset.Add(new string[values.Count + 1]);
-                dataset[i][0] = title;
-
-                for (int j = 0; j < values.Count; j++)
+                for (int j = 0; j < valuesRow.Count; j++)
                 {
-                    dataset[i][j + 1] = values[j].ToString()!;
+                    values[j] = valuesRow[j].ToString()!;
                 }
-
-                scoresTable.SetAdapter(new NestedRecyclerAdapter(Resource.Layout.nested_item_readonly, dataset));
-                activity.CreateToast(title, ToastLength.Short);
             }
-            catch (Exception ex)
+            catch (GoogleApiException ex)
             {
-                activity.CreateToast($"{sheetId}: {ex.Message}");
+                if (ex.HttpStatusCode == HttpStatusCode.BadRequest && activity.DriveService is not null)
+                {
+                    using MemoryStream memoryStream = new MemoryStream();
+                    var fileRequest = activity.DriveService.Files.Get(sheetId);
+                    
+                    var file = await fileRequest.ExecuteAsync();
+                    title = file.Name.Split(".xls")[0];
+
+                    var downloadResponse = await fileRequest.DownloadAsync(memoryStream);
+                    if (downloadResponse.Status == Google.Apis.Download.DownloadStatus.Failed)
+                    {
+                        activity.CreateToast($"{sheetId}: {downloadResponse.Exception.Message}");
+                        return;
+                    }
+
+                    XLWorkbook workbook = new (memoryStream);
+                    IXLCells cells = workbook.Cells(sheetRange);
+
+                    values = [];
+                    foreach (var cell in cells)
+                    {
+                        if (!cell.IsEmpty())
+                        {
+                            values.Add(cell.GetString());
+                        }
+                    }
+                }
+                else
+                {
+                    activity.CreateToast($"{sheetId}: {ex.Message}");
+                    return;
+                }
             }
+
+            dataset.Add(new string[values.Count + 1]);
+            dataset[i][0] = title;
+
+            for (int j = 0; j < values.Count; j++)
+            {
+                dataset[i][j + 1] = values[j];
+            }
+
+            scoresTable.SetAdapter(new NestedRecyclerAdapter(Resource.Layout.nested_item_readonly, dataset));
+            activity.CreateToast(title, ToastLength.Short);
         }
     }
 }
